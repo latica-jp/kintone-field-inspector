@@ -1,20 +1,32 @@
-// jQuery は webpack がロード
-const PLUGIN_ID = kintone.$PLUGIN_ID;
+const getFieldIdByLabel = label => {
+  return getFieldId(field => field.label === label)
+}
 
-kintone.events.on('app.record.index.show', () => {
-  const config = kintone.plugin.app.getConfig(PLUGIN_ID);
+const getFieldIdByCode = code => {
+  return getFieldId(field => field.var === code)
+}
 
-  const spaceElement = kintone.app.getHeaderSpaceElement();
-  const fragment = document.createDocumentFragment();
-  const headingEl = document.createElement('h3');
-  const messageEl = document.createElement('p');
+const getFieldId = finder => {
+  const field = Object.values(
+    cybozu.data.page.FORM_DATA.schema.table.fieldList
+  ).find(finder)
+  return field ? field.id : null
+}
 
-  messageEl.classList.add('plugin-space-message');
-  messageEl.textContent = config.message;
-  headingEl.classList.add('plugin-space-heading');
-  headingEl.textContent = 'Hello kintone plugin!';
+const inspectFieldByLabel = label => {
+  return inspect(
+    document.querySelector(getFieldSelector(getFieldIdByLabel(label)))
+  )
+}
 
-  fragment.appendChild(headingEl);
-  fragment.appendChild(messageEl);
-  spaceElement.appendChild(fragment);
-});
+const inspectFieldByCode = code => {
+  return inspect(
+    document.querySelector(getFieldSelector(getFieldIdByCode(code)))
+  )
+}
+
+const getFieldSelector = id => {
+  return `.value-${id}`
+}
+
+window['k'] = { lb: inspectFieldByLabel, cd: inspectFieldByCode }
