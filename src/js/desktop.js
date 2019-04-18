@@ -1,32 +1,38 @@
-const getFieldIdByLabel = label => {
-  return getFieldId(field => field.label === label)
+const getFieldByLabel = label => {
+  return getField(field => field.label === label)
 }
 
-const getFieldIdByCode = code => {
-  return getFieldId(field => field.var === code)
+const getFieldByCode = code => {
+  return getField(field => field.var === code)
 }
 
-const getFieldId = finder => {
-  const field = Object.values(
-    cybozu.data.page.FORM_DATA.schema.table.fieldList
-  ).find(finder)
-  return field ? field.id : null
+const getField = finder => {
+  return Object.values(cybozu.data.page.FORM_DATA.schema.table.fieldList).find(
+    finder
+  )
 }
 
 const inspectFieldByLabel = label => {
-  return inspect(
-    document.querySelector(getFieldSelector(getFieldIdByLabel(label)))
-  )
+  const field = getFieldByLabel(label)
+  if (field) {
+    inspect(document.querySelector(getFieldSelector(field.id)))
+  }
+  return field
 }
 
 const inspectFieldByCode = code => {
-  return inspect(
-    document.querySelector(getFieldSelector(getFieldIdByCode(code)))
-  )
+  const field = getFieldByCode(code)
+  if (field) {
+    inspect(document.querySelector(getFieldSelector(field.id)))
+  }
+  return field
 }
 
 const getFieldSelector = id => {
   return `.value-${id}`
 }
 
-window['k'] = { lb: inspectFieldByLabel, cd: inspectFieldByCode }
+window['k'] = {
+  lb: inspectFieldByLabel,
+  cd: inspectFieldByCode,
+}
