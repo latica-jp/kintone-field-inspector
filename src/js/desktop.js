@@ -32,7 +32,7 @@ const inspectFieldById = id => {
 }
 
 const inspectField = field => {
-  if (field) {
+  if (field && !omitInspection) {
     inspect(document.querySelector(getFieldSelector(field.id)))
   }
   return field
@@ -42,8 +42,21 @@ const getFieldSelector = id => {
   return `.value-${id}`
 }
 
+let omitInspection = false
+
+const turnOnInspection = () => {
+  omitInspection = false
+}
+
+const turnOffInspection = () => {
+  omitInspection = true
+}
+
 window['k'] = {
   lb: inspectFieldByLabel,
+  nm: inspectFieldByLabel,
   cd: inspectFieldByCode,
   id: inspectFieldById,
+  on: turnOnInspection,
+  off: turnOffInspection,
 }
